@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is a Small Family Better? — A4 Landscape Presentation</title>
+<style>
+/* =========================================================
+   GLOBAL / RESET
+   ========================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #1F3864;
+  --navy-light: #D9E2F3;
+  --green: #4CAF50;
+  --green-dark: #2E7D32;
+  --green-light: #E8F5E9;
+  --red: #B23A48;
+  --red-dark: #8B2A36;
+  --red-light: #FBE9EB;
+  --pastel-blue: #8FB8DE;
+  --blue-light: #EAF2FB;
+  --white: #FFFFFF;
+  --gray: #595959;
+  --dark: #333333;
+  --yellow: #FFF3CD;
+  --yellow-d: #E0A800;
+  --font: 'Aptos', 'Calibri', 'Arial', 'Segoe UI', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: #2a2d35;
+  color: var(--dark);
+  overflow: hidden;
+}
+
+/* =========================================================
+   APP LAYOUT
+   ========================================================= */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+#stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* A4 Landscape: 29.7 × 21 cm → aspect ratio 297/210 = 1.414 */
+.slide {
+  position: relative;
+  width: min(96vw, calc((100vh - 140px) * 1.4142));
+  aspect-ratio: 297 / 210;
+  background: var(--white);
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+  display: none;
+  animation: fadeIn 0.35s ease;
+}
+.slide.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* All inner sizes use % of slide to stay proportional */
+.slide * { font-family: var(--font); }
+
+/* =========================================================
+   COMMON ELEMENTS
+   ========================================================= */
+.title {
+  position: absolute;
+  top: 3.8%;
+  left: 4%;
+  font-size: clamp(16px, 2.4vw, 34px);
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.2px;
+}
+.title.underline::after {
+  content: '';
+  display: block;
+  width: 70px;
+  height: 4px;
+  background: var(--navy);
+  margin-top: 6px;
+  border-radius: 2px;
+}
+.title.green { color: var(--green); }
+.title.green::after { background: var(--green); }
+.title.red   { color: var(--red); }
+.title.red::after   { background: var(--red); }
+
+.footer {
+  position: absolute;
+  bottom: 1.5%;
+  left: 4%;
+  font-size: clamp(8px, 0.9vw, 12px);
+  color: var(--gray);
+  font-style: italic;
+}
+.page-num {
+  position: absolute;
+  bottom: 1.5%;
+  right: 4%;
+  font-size: clamp(8px, 0.9vw, 12px);
+  color: var(--gray);
+}
+
+/* Speaker badge */
+.speaker-badge {
+  position: absolute;
+  top: 3.8%;
+  right: 4%;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 700;
+}
+.speaker-badge.green { background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); }
+.speaker-badge.red   { background: var(--red-light);   color: var(--red);   border: 1.5px solid var(--red); }
+
+/* =========================================================
+   SLIDE 1 — COVER
+   ========================================================= */
+.cover .top-bar   { position: absolute; top: 0; left: 0; right: 0; height: 6%; background: var(--navy); }
+.cover .bottom-bar{ position: absolute; bottom: 0; left: 0; right: 0; height: 6%; background: var(--blue-light); }
+
+.cover .title-main {
+  position: absolute;
+  top: 18%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(22px, 3.4vw, 48px);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 1px;
+}
+.cover .subtitle {
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(12px, 1.5vw, 20px);
+  font-style: italic;
+  color: var(--gray);
+}
+.cover .members {
+  position: absolute;
+  top: 70%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(11px, 1.4vw, 18px);
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* Family icon on cover */
+.family-icon {
+  position: absolute;
+  left: 8%;
+  top: 42%;
+  width: 22%;
+  height: 30%;
+}
+.family-icon .head {
+  position: absolute;
+  border-radius: 50%;
+}
+.family-icon .body {
+  position: absolute;
+  border-radius: 40% 40% 20% 20%;
+}
+
+/* Question bubble */
+.q-bubble {
+  position: absolute;
+  right: 10%;
+  top: 42%;
+  width: 20%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--blue-light);
+  border: 3px solid var(--pastel-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(40px, 6vw, 90px);
+  font-weight: 800;
+  color: var(--navy);
+}
+
+/* =========================================================
+   SLIDE 2 — MEET OUR TEAM
+   ========================================================= */
+.team-grid {
+  position: absolute;
+  top: 22%;
+  left: 4%;
+  right: 4%;
+  height: 68%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5%;
+}
+.team-card {
+  border-radius: 10px;
+  padding: 4% 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+.team-card .avatar {
+  width: 55%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: clamp(14px, 1.8vw, 24px);
+  margin-bottom: 10%;
+}
+.team-card .name {
+  font-size: clamp(11px, 1.3vw, 18px);
+  font-weight: 800;
+  margin-bottom: 4%;
+}
+.team-card .role {
+  font-size: clamp(8px, 0.95vw, 13px);
+  color: var(--dark);
+  margin-bottom: 6%;
+  line-height: 1.3;
+}
+.team-card .divider {
+  width: 30%;
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 6%;
+}
+.team-card .note {
+  font-size: clamp(7px, 0.8vw, 11px);
+  color: var(--gray);
+  font-style: italic;
+}
+
+/* =========================================================
+   SLIDE 3 — WHAT IS A SMALL FAMILY
+   ========================================================= */
+.two-col {
+  position: absolute;
+  top: 22%;
+  left: 4%;
+  right: 4%;
+  bottom: 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3%;
+}
+.def-box {
+  background: var(--blue-light);
+  border-left: 5px solid var(--navy);
+  border-radius: 10px;
+  padding: 6%;
+  margin-bottom: 6%;
+  font-size: clamp(11px, 1.35vw, 19px);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--navy);
+  line-height: 1.4;
+}
+.label-small {
+  font-size: clamp(8px, 0.9vw, 12px);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 1.5px;
+  margin-bottom: 2%;
+}
+.context-text {
+  font-size: clamp(11px, 1.25vw, 17px);
+  font-style: italic;
+  color: var(--dark);
+  line-height: 1.4;
+  margin-bottom: 8%;
+}
+.note-small {
+  font-size: clamp(8px, 0.95vw, 13px);
+  color: var(--gray);
+  font-style: italic;
+  line-height: 1.4;
+}
+.illus-box {
+  background: var(--green-light);
+  border: 2px solid var(--green);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4%;
+  position: relative;
+}
+.illus-caption {
+  position: absolute;
+  bottom: 4%;
+  width: 90%;
+  text-align: center;
+  font-size: clamp(8px, 0.9vw, 12px);
+  color: var(--gray);
+  font-style: italic;
+}
+
+/* =========================================================
+   SLIDE 4 — BIG QUESTION
+   ========================================================= */
+.big-q {
+  position: absolute;
+  top: 12%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(22px, 3.4vw, 46px);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 1px;
+}
+.side-cards {
+  position: absolute;
+  top: 32%;
+  left: 8%;
+  right: 8%;
+  height: 32%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5%;
+}
+.side-card {
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+}
+.side-card.green { background: var(--green-light); border: 2px solid var(--green); }
+.side-card.red   { background: var(--red-light);   border: 2px solid var(--red);   }
+.side-card .label {
+  font-size: clamp(14px, 1.9vw, 24px);
+  font-weight: 800;
+}
+.side-card.green .label { color: var(--green); }
+.side-card.red   .label { color: var(--red); }
+.side-card .sub {
+  font-size: clamp(9px, 1.1vw, 15px);
+  font-weight: 600;
+}
+.side-card.green .sub { color: var(--green-dark); }
+.side-card.red   .sub { color: var(--red-dark); }
+
+.lead-in {
+  position: absolute;
+  bottom: 12%;
+  left: 12%;
+  right: 12%;
+  background: var(--blue-light);
+  border: 1.5px solid var(--pastel-blue);
+  border-radius: 10px;
+  padding: 2.5% 4%;
+  text-align: center;
+  font-size: clamp(10px, 1.15vw, 16px);
+  font-style: italic;
+  color: var(--navy);
+  line-height: 1.4;
+}
+
+/* =========================================================
+   SLIDE 5 — DEBATE ROADMAP
+   ========================================================= */
+.roadmap {
+  position: absolute;
+  top: 32%;
+  left: 3%;
+  right: 3%;
+  height: 32%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4%;
+}
+.rm-step {
+  flex: 1;
+  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8%;
+  padding: 2%;
+}
+.rm-step .name {
+  font-size: clamp(9px, 1.1vw, 15px);
+  font-weight: 800;
+}
+.rm-step .role {
+  font-size: clamp(7px, 0.8vw, 11px);
+  color: var(--dark);
+}
+.rm-arrow {
+  flex: 0 0 2%;
+  color: var(--pastel-blue);
+  font-size: clamp(14px, 1.6vw, 22px);
+  text-align: center;
+  font-weight: 800;
+}
+.rm-order {
+  position: absolute;
+  top: 70%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(10px, 1.15vw, 15px);
+  font-style: italic;
+  color: var(--gray);
+}
+.legend-row {
+  position: absolute;
+  bottom: 10%;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2%;
+}
+.legend-pill {
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: clamp(8px, 0.95vw, 13px);
+  font-weight: 700;
+}
+.legend-pill.green { background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); }
+.legend-pill.red   { background: var(--red-light);   color: var(--red);   border: 1.5px solid var(--red); }
+.legend-pill.navy  { background: var(--navy-light);  color: var(--navy);  border: 1.5px solid var(--navy); }
+
+/* =========================================================
+   DEBATE SLIDE (6-11)
+   ========================================================= */
+.debate-grid {
+  position: absolute;
+  top: 18%;
+  left: 4%;
+  right: 4%;
+  bottom: 20%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3%;
+}
+.main-arg {
+  border-radius: 10px;
+  padding: 5% 5%;
+  font-size: clamp(10px, 1.2vw, 16px);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.4;
+  margin-bottom: 4%;
+}
+.main-arg.green { background: var(--green-light); color: var(--green-dark); border-left: 4px solid var(--green); }
+.main-arg.red   { background: var(--red-light);   color: var(--red-dark);   border-left: 4px solid var(--red);   }
+
+.bullet-label {
+  font-size: clamp(8px, 0.9vw, 12px);
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: 1px;
+  margin-bottom: 2%;
+  font-style: italic;
+}
+.bullets {
+  list-style: none;
+  font-size: clamp(9px, 1.05vw, 15px);
+  color: var(--dark);
+  line-height: 1.5;
+}
+.bullets li {
+  padding-left: 1.2em;
+  position: relative;
+  margin-bottom: 4%;
+}
+.bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  font-weight: 800;
+}
+.bullets.green li::before { color: var(--green); }
+.bullets.red   li::before { color: var(--red); }
+
+.keywords-box {
+  margin-top: 4%;
+  padding: 5%;
+  border-radius: 8px;
+  font-size: clamp(9px, 1.1vw, 15px);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.keywords-box.green { background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); }
+.keywords-box.red   { background: var(--red-light);   color: var(--red);   border: 1.5px solid var(--red);   }
+
+/* Flow horizontal in debate slides */
+.flow-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1%;
+  margin-bottom: 4%;
+}
+.flow-h .step {
+  flex: 1;
+  padding: 4% 2%;
+  border-radius: 8px;
+  text-align: center;
+  font-size: clamp(7px, 0.85vw, 12px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.flow-h.green .step { background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); }
+.flow-h.red   .step { background: var(--red-light);   color: var(--red);   border: 1.5px solid var(--red);   }
+.flow-h .arrow {
+  flex: 0 0 4%;
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(10px, 1.2vw, 16px);
+}
+.flow-h.green .arrow { color: var(--green); }
+.flow-h.red   .arrow { color: var(--red);   }
+
+.illus-placeholder {
+  flex: 1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4%;
+  font-style: italic;
+  color: var(--gray);
+  font-size: clamp(8px, 0.95vw, 13px);
+  line-height: 1.4;
+  min-height: 0;
+}
+.illus-placeholder.green { background: var(--blue-light); border: 1.5px dashed var(--pastel-blue); }
+.illus-placeholder.red   { background: var(--red-light); border: 1.5px dashed var(--red); }
+
+.transition-bar {
+  position: absolute;
+  bottom: 6%;
+  left: 4%;
+  right: 4%;
+  background: var(--blue-light);
+  border: 1.5px solid var(--pastel-blue);
+  border-radius: 8px;
+  padding: 1.5% 3%;
+  font-size: clamp(9px, 1.05vw, 14px);
+  color: var(--dark);
+  line-height: 1.3;
+}
+.transition-bar .label { color: var(--navy); font-weight: 800; }
+.transition-bar .text  { font-style: italic; }
+
+/* =========================================================
+   SLIDE 12 — COMPLETE DEBATE FLOW
+   ========================================================= */
+.full-flow {
+  position: absolute;
+  top: 16%;
+  left: 8%;
+  right: 8%;
+  bottom: 6%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.ff-row {
+  display: flex;
+  align-items: center;
+  padding: 0.6% 1.5%;
+  border-radius: 6px;
+  font-size: clamp(8px, 0.95vw, 13px);
+  border-left: 4px solid;
+  flex: 1;
+  max-height: 11%;
+}
+.ff-row .name { font-weight: 800; margin-right: 6px; }
+.ff-row.green { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+.ff-row.red   { background: var(--red-light);   border-color: var(--red);   color: var(--red-dark);   }
+.ff-row.navy  { background: var(--navy-light);  border-color: var(--navy);  color: var(--navy);       }
+.ff-row .point { color: var(--dark); }
+
+.ff-arrow {
+  text-align: center;
+  font-size: clamp(8px, 0.9vw, 13px);
+  font-weight: 800;
+  height: 2%;
+  line-height: 1;
+}
+.ff-arrow.green { color: var(--green); }
+.ff-arrow.red   { color: var(--red);   }
+.ff-arrow.navy  { color: var(--navy);  }
+
+/* =========================================================
+   SLIDE 13 & 15 — TWO COLUMNS COMPARE
+   ========================================================= */
+.compare-grid {
+  position: absolute;
+  top: 18%;
+  left: 4%;
+  right: 4%;
+  bottom: 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4%;
+}
+.compare-card {
+  border-radius: 12px;
+  padding: 5% 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 4%;
+}
+.compare-card.green { background: var(--green-light); border: 2px solid var(--green); }
+.compare-card.red   { background: var(--red-light);   border: 2px solid var(--red);   }
+.compare-card h3 {
+  font-size: clamp(13px, 1.6vw, 21px);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3%;
+}
+.compare-card.green h3 { color: var(--green); }
+.compare-card.red   h3 { color: var(--red);   }
+.compare-card ul {
+  list-style: none;
+  font-size: clamp(10px, 1.15vw, 16px);
+  line-height: 1.5;
+  color: var(--dark);
+}
+.compare-card ul li {
+  padding-left: 1.2em;
+  position: relative;
+  margin-bottom: 5%;
+}
+.compare-card ul li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  font-weight: 800;
+}
+.compare-card.green ul li::before { color: var(--green); }
+.compare-card.red   ul li::before { color: var(--red);   }
+
+.mid-note {
+  position: absolute;
+  bottom: 4%;
+  width: 100%;
+  text-align: center;
+  font-style: italic;
+  color: var(--gray);
+  font-size: clamp(9px, 1vw, 14px);
+}
+
+/* =========================================================
+   SLIDE 14 — KEY VOCABULARY
+   ========================================================= */
+.vocab-grid {
+  position: absolute;
+  top: 18%;
+  left: 6%;
+  right: 6%;
+  bottom: 6%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 2.5%;
+}
+.vocab-card {
+  background: var(--blue-light);
+  border: 1.5px solid var(--pastel-blue);
+  border-radius: 8px;
+  padding: 5% 6%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6%;
+}
+.vocab-card .word {
+  font-size: clamp(10px, 1.25vw, 17px);
+  font-weight: 800;
+  color: var(--navy);
+}
+.vocab-card .def {
+  font-size: clamp(8px, 0.95vw, 13px);
+  font-style: italic;
+  color: var(--dark);
+  line-height: 1.3;
+}
+
+/* =========================================================
+   SLIDE 16 — BALANCED FINAL OPINION
+   ========================================================= */
+.balanced-quote {
+  position: absolute;
+  top: 18%;
+  left: 8%;
+  right: 8%;
+  background: var(--blue-light);
+  border: 1.5px solid var(--pastel-blue);
+  border-radius: 10px;
+  padding: 3% 4%;
+  text-align: center;
+  font-size: clamp(11px, 1.35vw, 18px);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.4;
+}
+.balanced-middle {
+  position: absolute;
+  top: 38%;
+  left: 8%;
+  right: 8%;
+  text-align: center;
+  font-size: clamp(10px, 1.15vw, 16px);
+  font-style: italic;
+  color: var(--dark);
+  line-height: 1.5;
+}
+.balanced-final {
+  position: absolute;
+  bottom: 12%;
+  left: 8%;
+  right: 8%;
+  background: var(--white);
+  border: 2px solid var(--navy);
+  border-radius: 12px;
+  padding: 4% 5%;
+  text-align: center;
+  font-size: clamp(11px, 1.4vw, 19px);
+  font-weight: 800;
+  font-style: italic;
+  color: var(--navy);
+  line-height: 1.45;
+}
+
+/* =========================================================
+   SLIDE 17 — GAME
+   ========================================================= */
+.game-slide { background: var(--yellow); }
+.game-title {
+  position: absolute;
+  top: 22%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(24px, 3.6vw, 50px);
+  font-weight: 800;
+  color: var(--red-dark);
+  letter-spacing: 1px;
+}
+.game-box {
+  position: absolute;
+  top: 46%;
+  left: 10%;
+  right: 10%;
+  background: var(--white);
+  border: 2px solid var(--yellow-d);
+  border-radius: 12px;
+  padding: 4% 5%;
+  text-align: center;
+  font-size: clamp(12px, 1.5vw, 20px);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--navy);
+  line-height: 1.4;
+}
+.game-ready {
+  position: absolute;
+  bottom: 12%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(14px, 1.7vw, 22px);
+  font-weight: 800;
+  color: var(--red-dark);
+}
+.q-deco {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--yellow-d);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  opacity: 0.55;
+}
+
+/* =========================================================
+   SLIDE 18 — THANK YOU
+   ========================================================= */
+.thank .top-bar   { position: absolute; top: 0; left: 0; right: 0; height: 6%; background: var(--navy); }
+.thank .bottom-bar{ position: absolute; bottom: 0; left: 0; right: 0; height: 6%; background: var(--blue-light); }
+.thank-title {
+  position: absolute;
+  top: 24%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(20px, 3.2vw, 44px);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 1px;
+}
+.thank-line {
+  position: absolute;
+  top: 44%;
+  left: 40%;
+  right: 40%;
+  height: 4px;
+  background: var(--pastel-blue);
+  border-radius: 2px;
+}
+.thank-question {
+  position: absolute;
+  top: 52%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(13px, 1.7vw, 22px);
+  font-style: italic;
+  color: var(--dark);
+}
+.thank-small {
+  position: absolute;
+  bottom: 16%;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(10px, 1.2vw, 16px);
+  color: var(--gray);
+}
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
+#controls {
+  height: 60px;
+  background: #1c1f26;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 20px;
+  border-top: 1px solid #333;
+  color: #ddd;
+  font-size: 13px;
+}
+
+#controls button {
+  background: #2f3542;
+  border: 1px solid #444b58;
+  color: #eaeaea;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+#controls button:hover { background: #3d4553; }
+#controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#slide-indicator {
+  font-weight: 700;
+  color: #fff;
+  min-width: 80px;
+  text-align: center;
+}
+
+#progress {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  height: 3px;
+  background: var(--pastel-blue);
+  transition: width 0.3s ease;
+  width: 0;
+  z-index: 10;
+}
+
+.notes-toggle {
+  background: #2f3542;
+  border: 1px solid #444b58;
+  color: #eaeaea;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+/* Speaker notes panel */
+#notes-panel {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  background: rgba(20, 22, 28, 0.97);
+  color: #ddd;
+  padding: 16px 24px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-top: 2px solid var(--pastel-blue);
+  display: none;
+  max-height: 30vh;
+  overflow-y: auto;
+  z-index: 20;
+}
+#notes-panel.show { display: block; }
+#notes-panel h4 {
+  color: var(--pastel-blue);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+#notes-panel p { color: #e0e0e0; }
+
+/* Fullscreen mode hides controls */
+#app.fullscreen #controls,
+#app.fullscreen #notes-panel { display: none !important; }
+#app.fullscreen #stage { padding: 0; }
+#app.fullscreen .slide {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  aspect-ratio: unset;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .slide { width: 98vw; }
+  #controls { gap: 10px; }
+  #controls button { padding: 6px 12px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="stage">
+
+    <!-- =====================================================
+         SLIDE 1 — COVER
+         ===================================================== -->
+    <section class="slide cover active" data-slide="1">
+      <div class="top-bar"></div>
+      <div class="bottom-bar"></div>
+
+      <!-- family icon (left) -->
+      <div class="family-icon">
+        <div class="head" style="left:8%;  top:0%;   width:22%; aspect-ratio:1; background:#8FB8DE;"></div>
+        <div class="body" style="left:0%;  top:26%;  width:38%; height:60%; background:#8FB8DE;"></div>
+        <div class="head" style="right:8%; top:0%;   width:22%; aspect-ratio:1; background:#4CAF50;"></div>
+        <div class="body" style="right:0%; top:26%;  width:38%; height:60%; background:#4CAF50;"></div>
+        <div class="head" style="left:38%; top:48%;  width:18%; aspect-ratio:1; background:#E0A800;"></div>
+        <div class="body" style="left:32%; top:68%;  width:30%; height:32%; background:#E0A800;"></div>
+      </div>
+
+      <div class="q-bubble">?</div>
+
+      <div class="title-main">IS A SMALL FAMILY BETTER?</div>
+      <div class="subtitle">Advantages and Disadvantages of a Small Family</div>
+      <div class="members">Quí · C. Nhi · Chim · Châu · Sáng</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 2 — MEET OUR TEAM
+         ===================================================== -->
+    <section class="slide" data-slide="2">
+      <h1 class="title underline">Meet Our Team</h1>
+
+      <div class="team-grid">
+        <div class="team-card" style="background:#D9E2F3;border:2px solid #1F3864;">
+          <div class="avatar" style="background:#1F3864;">Q</div>
+          <div class="name" style="color:#1F3864;">Quí</div>
+          <div class="role">Opening &amp; Conclusion</div>
+          <div class="divider" style="background:#1F3864;"></div>
+          <div class="note">Facilitator</div>
+        </div>
+        <div class="team-card" style="background:#E8F5E9;border:2px solid #4CAF50;">
+          <div class="avatar" style="background:#4CAF50;">CN</div>
+          <div class="name" style="color:#4CAF50;">C. Nhi</div>
+          <div class="role">Supporting Side</div>
+          <div class="divider" style="background:#4CAF50;"></div>
+          <div class="note">Argues FOR</div>
+        </div>
+        <div class="team-card" style="background:#E8F5E9;border:2px solid #4CAF50;">
+          <div class="avatar" style="background:#4CAF50;">C</div>
+          <div class="name" style="color:#4CAF50;">Chim</div>
+          <div class="role">Supporting Side</div>
+          <div class="divider" style="background:#4CAF50;"></div>
+          <div class="note">Argues FOR</div>
+        </div>
+        <div class="team-card" style="background:#FBE9EB;border:2px solid #B23A48;">
+          <div class="avatar" style="background:#B23A48;">C</div>
+          <div class="name" style="color:#B23A48;">Châu</div>
+          <div class="role">Opposing Side</div>
+          <div class="divider" style="background:#B23A48;"></div>
+          <div class="note">Argues AGAINST</div>
+        </div>
+        <div class="team-card" style="background:#FBE9EB;border:2px solid #B23A48;">
+          <div class="avatar" style="background:#B23A48;">S</div>
+          <div class="name" style="color:#B23A48;">Sáng</div>
+          <div class="role">Opposing Side</div>
+          <div class="divider" style="background:#B23A48;"></div>
+          <div class="note">Argues AGAINST</div>
+        </div>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">2 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 3 — WHAT IS A SMALL FAMILY
+         ===================================================== -->
+    <section class="slide" data-slide="3">
+      <h1 class="title underline">What Is a Small Family?</h1>
+
+      <div class="two-col">
+        <div>
+          <div class="def-box">
+            "A small family usually consists of parents and one or two children."
+          </div>
+          <div class="label-small">CONTEXT</div>
+          <div class="context-text">
+            Small families have become increasingly common in modern society.
+          </div>
+          <div class="note-small">
+            Note: This is a general description, not a rule for every family.
+          </div>
+        </div>
+
+        <div class="illus-box">
+          <div style="position:relative;width:70%;height:60%;">
+            <div class="head" style="position:absolute;left:6%;top:5%;width:22%;aspect-ratio:1;border-radius:50%;background:#8FB8DE;"></div>
+            <div class="body" style="position:absolute;left:0%;top:32%;width:36%;height:58%;border-radius:40% 40% 20% 20%;background:#8FB8DE;"></div>
+            <div class="head" style="position:absolute;right:6%;top:5%;width:22%;aspect-ratio:1;border-radius:50%;background:#4CAF50;"></div>
+            <div class="body" style="position:absolute;right:0%;top:32%;width:36%;height:58%;border-radius:40% 40% 20% 20%;background:#4CAF50;"></div>
+            <div class="head" style="position:absolute;left:39%;top:55%;width:20%;aspect-ratio:1;border-radius:50%;background:#E0A800;"></div>
+            <div class="body" style="position:absolute;left:32%;top:75%;width:34%;height:28%;border-radius:40% 40% 20% 20%;background:#E0A800;"></div>
+          </div>
+          <div class="illus-caption">A modern small family: two parents, one or two children</div>
+        </div>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">3 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 4 — THE BIG QUESTION
+         ===================================================== -->
+    <section class="slide" data-slide="4">
+      <div class="big-q">IS A SMALL FAMILY BETTER?</div>
+
+      <div class="side-cards">
+        <div class="side-card green">
+          <div class="label">ADVANTAGES</div>
+          <div class="sub">Supporting Side</div>
+          <div style="font-size:clamp(14px,1.8vw,24px);">🟢</div>
+        </div>
+        <div class="side-card red">
+          <div class="label">DISADVANTAGES</div>
+          <div class="sub">Opposing Side</div>
+          <div style="font-size:clamp(14px,1.8vw,24px);">🔴</div>
+        </div>
+      </div>
+
+      <div class="lead-in">
+        Today, instead of simply listing advantages and disadvantages, we will explore
+        both sides through a short debate.
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">4 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 5 — DEBATE ROADMAP
+         ===================================================== -->
+    <section class="slide" data-slide="5">
+      <h1 class="title underline">Debate Roadmap</h1>
+
+      <div class="roadmap">
+        <div class="rm-step" style="background:#E8F5E9;border:2px solid #4CAF50;">
+          <div class="name" style="color:#4CAF50;">C. Nhi</div>
+          <div class="role">SP #1</div>
+        </div>
+        <div class="rm-arrow">→</div>
+        <div class="rm-step" style="background:#FBE9EB;border:2px solid #B23A48;">
+          <div class="name" style="color:#B23A48;">Sáng</div>
+          <div class="role">OP #1</div>
+        </div>
+        <div class="rm-arrow">→</div>
+        <div class="rm-step" style="background:#E8F5E9;border:2px solid #4CAF50;">
+          <div class="name" style="color:#4CAF50;">Chim</div>
+          <div class="role">SP #2</div>
+        </div>
+        <div class="rm-arrow">→</div>
+        <div class="rm-step" style="background:#FBE9EB;border:2px solid #B23A48;">
+          <div class="name" style="color:#B23A48;">Châu</div>
+          <div class="role">OP #2</div>
+        </div>
+        <div class="rm-arrow">→</div>
+        <div class="rm-step" style="background:#E8F5E9;border:2px solid #4CAF50;">
+          <div class="name" style="color:#4CAF50;">C. Nhi</div>
+          <div class="role">SP #3</div>
+        </div>
+        <div class="rm-arrow">→</div>
+        <div class="rm-step" style="background:#FBE9EB;border:2px solid #B23A48;">
+          <div class="name" style="color:#B23A48;">Sáng</div>
+          <div class="role">OP #3</div>
+        </div>
+        <div class="rm-arrow">→</div>
+        <div class="rm-step" style="background:#D9E2F3;border:2px solid #1F3864;">
+          <div class="name" style="color:#1F3864;">Quí</div>
+          <div class="role">Conclusion</div>
+        </div>
+      </div>
+
+      <div class="rm-order">Order: C. Nhi → Sáng → Chim → Châu → C. Nhi → Sáng → Quí</div>
+
+      <div class="legend-row">
+        <div class="legend-pill green">🟢 Supporting Side</div>
+        <div class="legend-pill red">🔴 Opposing Side</div>
+        <div class="legend-pill navy">⚫ Neutral</div>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">5 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 6 — SP #1: MORE PARENTAL ATTENTION
+         ===================================================== -->
+    <section class="slide" data-slide="6">
+      <h1 class="title green underline">Supporting Point #1: More Parental Attention</h1>
+      <div class="speaker-badge green">Speaker: C. Nhi · Supporting Side</div>
+
+      <div class="debate-grid">
+        <div>
+          <div class="main-arg green">
+            "A small family allows parents to give more attention to their children."
+          </div>
+          <div class="bullet-label">SUPPORTING IDEAS:</div>
+          <ul class="bullets green">
+            <li>Parents have more time for each child.</li>
+            <li>They can help children study.</li>
+            <li>They can listen to their children's problems.</li>
+            <li>They can understand their children's needs better.</li>
+          </ul>
+          <div class="keywords-box green">TIME · CARE · UNDERSTANDING</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;">
+          <div class="bullet-label" style="color:#4CAF50;">DIAGRAM</div>
+          <div class="flow-h green">
+            <div class="step">Fewer Children</div>
+            <div class="arrow">→</div>
+            <div class="step">More Time</div>
+            <div class="arrow">→</div>
+            <div class="step">More Attention</div>
+          </div>
+          <div class="illus-placeholder green">[Illustration: parents reading with their child]</div>
+        </div>
+      </div>
+
+      <div class="transition-bar">
+        <span class="label">Transition:</span>
+        <span class="text"> But is more attention always a good thing?</span>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">6 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 7 — OP #1: TOO MUCH ATTENTION
+         ===================================================== -->
+    <section class="slide" data-slide="7">
+      <h1 class="title red underline">Opposing Point #1: Too Much Attention Can Cause Pressure</h1>
+      <div class="speaker-badge red">Speaker: Sáng · Opposing Side</div>
+
+      <div class="debate-grid">
+        <div>
+          <div class="main-arg red">
+            "I agree that children need attention. However, too much attention can sometimes be a problem."
+          </div>
+          <div class="bullet-label">SUPPORTING IDEAS:</div>
+          <ul class="bullets red">
+            <li>Parents may control their children too much.</li>
+            <li>They may have high expectations.</li>
+            <li>Children may feel stressed.</li>
+            <li>Children may feel that they cannot make their own choices.</li>
+          </ul>
+          <div class="keywords-box red">CONTROL · EXPECTATIONS · STRESS</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;">
+          <div class="bullet-label" style="color:#B23A48;">DIAGRAM</div>
+          <div class="flow-h red">
+            <div class="step">More Attention</div>
+            <div class="arrow">→</div>
+            <div class="step">Too Much Control</div>
+            <div class="arrow">→</div>
+            <div class="step">Pressure</div>
+          </div>
+          <div class="illus-placeholder red">[Illustration: child studying under pressure]</div>
+        </div>
+      </div>
+
+      <div class="transition-bar">
+        <span class="label">Transition:</span>
+        <span class="text"> But can more attention also have a positive effect?</span>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">7 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 8 — SP #2: BUILD INDEPENDENCE
+         ===================================================== -->
+    <section class="slide" data-slide="8">
+      <h1 class="title green underline">Supporting Point #2: Attention Can Build Independence</h1>
+      <div class="speaker-badge green">Speaker: Chim · Supporting Side</div>
+
+      <div class="debate-grid">
+        <div>
+          <div class="main-arg green">
+            "More attention does not always mean more control. Parents can use their time to teach children how to make decisions and become independent."
+          </div>
+          <div class="bullet-label">SUPPORTING IDEAS:</div>
+          <ul class="bullets green">
+            <li>Parents have more time to guide children.</li>
+            <li>Children can learn to make their own decisions.</li>
+            <li>Children can learn responsibility.</li>
+            <li>Parents can support without deciding everything.</li>
+          </ul>
+          <div class="keywords-box green">GUIDANCE · RESPONSIBILITY · INDEPENDENCE</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;">
+          <div class="bullet-label" style="color:#4CAF50;">DIAGRAM</div>
+          <div class="flow-h green" style="flex-wrap:wrap;">
+            <div class="step">Parental Guidance</div>
+            <div class="arrow">→</div>
+            <div class="step">Decision-making</div>
+            <div class="arrow">→</div>
+            <div class="step">Responsibility</div>
+            <div class="arrow">→</div>
+            <div class="step">Independence</div>
+          </div>
+          <div class="illus-placeholder green">[Illustration: parent guiding child to make a choice]</div>
+        </div>
+      </div>
+
+      <div class="transition-bar">
+        <span class="label">Transition:</span>
+        <span class="text"> However, is independence the only thing children need?</span>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">8 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 9 — OP #2: SOCIAL SKILLS
+         ===================================================== -->
+    <section class="slide" data-slide="9">
+      <h1 class="title red underline">Opposing Point #2: Children Need Social Skills</h1>
+      <div class="speaker-badge red">Speaker: Châu · Opposing Side</div>
+
+      <div class="debate-grid">
+        <div>
+          <div class="main-arg red">
+            "Children also need to learn how to interact with other children — not only be independent."
+          </div>
+          <div class="bullet-label">SUPPORTING IDEAS:</div>
+          <ul class="bullets red">
+            <li>Siblings can teach children how to share.</li>
+            <li>They can learn how to cooperate.</li>
+            <li>They can solve small problems together.</li>
+            <li>They can learn to understand other people's feelings.</li>
+          </ul>
+          <div class="keywords-box red">SHARING · COOPERATION · EMPATHY</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;">
+          <div class="bullet-label" style="color:#B23A48;">DIAGRAM</div>
+          <div class="flow-h red" style="flex-wrap:wrap;">
+            <div class="step">Sharing</div>
+            <div class="arrow">→</div>
+            <div class="step">Cooperation</div>
+            <div class="arrow">→</div>
+            <div class="step">Problem-solving</div>
+            <div class="arrow">→</div>
+            <div class="step">Social Skills</div>
+          </div>
+          <div class="illus-placeholder red">[Illustration: siblings playing together]</div>
+        </div>
+      </div>
+
+      <div class="transition-bar">
+        <span class="label">Transition:</span>
+        <span class="text"> But do children really need siblings to learn these skills?</span>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">9 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 10 — SP #3: SOCIAL SKILLS BEYOND FAMILY
+         ===================================================== -->
+    <section class="slide" data-slide="10">
+      <h1 class="title green underline">Supporting Point #3: Social Skills Beyond the Family</h1>
+      <div class="speaker-badge green">Speaker: C. Nhi · Supporting Side</div>
+
+      <div class="debate-grid">
+        <div>
+          <div class="main-arg green">
+            "Children do not need siblings to develop social skills. They can learn these skills from friends, classmates, and other people."
+          </div>
+          <div class="bullet-label">SUPPORTING IDEAS:</div>
+          <ul class="bullets green">
+            <li>Friends can teach children how to share.</li>
+            <li>School gives children opportunities to cooperate.</li>
+            <li>Children can join group activities.</li>
+            <li>They can make friends and learn how to communicate.</li>
+          </ul>
+          <div class="keywords-box green">FRIENDS · SCHOOL · COMMUNICATION</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;">
+          <div class="bullet-label" style="color:#4CAF50;">DIAGRAM</div>
+          <div class="flow-h green">
+            <div class="step">Friends + School</div>
+            <div class="arrow">+</div>
+            <div class="step">Group Activities</div>
+            <div class="arrow">=</div>
+            <div class="step">Social Skills</div>
+          </div>
+          <div class="illus-placeholder green">[Illustration: children in group activities at school]</div>
+        </div>
+      </div>
+
+      <div class="transition-bar">
+        <span class="label">Transition:</span>
+        <span class="text"> But can friends give children the same support as siblings?</span>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">10 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 11 — OP #3: SIBLINGS PROVIDE SUPPORT
+         ===================================================== -->
+    <section class="slide" data-slide="11">
+      <h1 class="title red underline">Opposing Point #3: Siblings Provide Special Support</h1>
+      <div class="speaker-badge red">Speaker: Sáng · Opposing Side</div>
+
+      <div class="debate-grid">
+        <div>
+          <div class="main-arg red">
+            "Siblings can give a different kind of support. They live together and can support each other every day."
+          </div>
+          <div class="bullet-label">SUPPORTING IDEAS:</div>
+          <ul class="bullets red">
+            <li>Siblings can play together.</li>
+            <li>They can share their feelings.</li>
+            <li>They can help each other.</li>
+            <li>They can support each other when parents are busy.</li>
+            <li>They grow up and experience many things together.</li>
+          </ul>
+          <div class="keywords-box red">DAILY SUPPORT · SHARED EXPERIENCES · BONDS</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;">
+          <div class="bullet-label" style="color:#B23A48;">DIAGRAM</div>
+          <div class="flow-h red">
+            <div class="step">Live Together</div>
+            <div class="arrow">→</div>
+            <div class="step">Support Daily</div>
+            <div class="arrow">→</div>
+            <div class="step">Shared Experiences</div>
+          </div>
+          <div class="illus-placeholder red">[Illustration: siblings supporting each other]</div>
+        </div>
+      </div>
+
+      <div class="transition-bar">
+        <span class="label">Final point of the debate —</span>
+        <span class="text"> now let's bring everything together.</span>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">11 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 12 — COMPLETE DEBATE FLOW
+         ===================================================== -->
+    <section class="slide" data-slide="12">
+      <h1 class="title underline">The Complete Debate Flow</h1>
+
+      <div class="full-flow">
+        <div class="ff-row green"><span class="name">C. Nhi:</span> <span class="point">More Parental Attention</span></div>
+        <div class="ff-arrow green">↓</div>
+        <div class="ff-row red"><span class="name">Sáng:</span> <span class="point">Too Much Attention → Pressure</span></div>
+        <div class="ff-arrow red">↓</div>
+        <div class="ff-row green"><span class="name">Chim:</span> <span class="point">Positive Attention → Independence</span></div>
+        <div class="ff-arrow green">↓</div>
+        <div class="ff-row red"><span class="name">Châu:</span> <span class="point">Independence Is Not Enough → Social Skills</span></div>
+        <div class="ff-arrow red">↓</div>
+        <div class="ff-row green"><span class="name">C. Nhi:</span> <span class="point">Social Skills Through Friends and School</span></div>
+        <div class="ff-arrow green">↓</div>
+        <div class="ff-row red"><span class="name">Sáng:</span> <span class="point">Siblings Provide Special Support</span></div>
+        <div class="ff-arrow red">↓</div>
+        <div class="ff-row navy"><span class="name">Quí:</span> <span class="point">Balanced Conclusion</span></div>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">12 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 13 — SIDE VS. SIDE
+         ===================================================== -->
+    <section class="slide" data-slide="13">
+      <h1 class="title underline">Supporting Side vs. Opposing Side</h1>
+
+      <div class="compare-grid">
+        <div class="compare-card green">
+          <h3>SUPPORTING SIDE</h3>
+          <ul>
+            <li>More parental attention.</li>
+            <li>Guidance can build independence.</li>
+            <li>Friends and school can develop social skills.</li>
+          </ul>
+        </div>
+        <div class="compare-card red">
+          <h3>OPPOSING SIDE</h3>
+          <ul>
+            <li>Too much attention can cause pressure.</li>
+            <li>Children need to practise social skills with siblings.</li>
+            <li>Siblings can provide special daily support.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mid-note">Both sides have valid points — neither side wins completely.</div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">13 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 14 — KEY VOCABULARY
+         ===================================================== -->
+    <section class="slide" data-slide="14">
+      <h1 class="title underline">Key Vocabulary</h1>
+
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="word">attention</div><div class="def">care and notice given to someone</div></div>
+        <div class="vocab-card"><div class="word">pressure</div><div class="def">stress from high expectations</div></div>
+        <div class="vocab-card"><div class="word">control</div><div class="def">making all decisions for someone</div></div>
+        <div class="vocab-card"><div class="word">expectations</div><div class="def">things parents hope children will do</div></div>
+        <div class="vocab-card"><div class="word">independence</div><div class="def">ability to make your own decisions</div></div>
+        <div class="vocab-card"><div class="word">responsibility</div><div class="def">doing what you should do</div></div>
+        <div class="vocab-card"><div class="word">social skills</div><div class="def">ability to interact with others</div></div>
+        <div class="vocab-card"><div class="word">cooperation</div><div class="def">working together</div></div>
+        <div class="vocab-card"><div class="word">empathy</div><div class="def">understanding others' feelings</div></div>
+        <div class="vocab-card"><div class="word">siblings</div><div class="def">brothers and sisters</div></div>
+        <div class="vocab-card"><div class="word">support</div><div class="def">help and encouragement</div></div>
+        <div class="vocab-card"><div class="word">communication</div><div class="def">sharing ideas and feelings</div></div>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">14 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 15 — CONCLUSION
+         ===================================================== -->
+    <section class="slide" data-slide="15">
+      <h1 class="title underline">What Have We Learned?</h1>
+
+      <div class="compare-grid">
+        <div class="compare-card green">
+          <h3>Supporting arguments</h3>
+          <ul>
+            <li>Parents can give more attention.</li>
+            <li>More attention can help children become independent.</li>
+            <li>Children can learn social skills from friends and school, even without siblings.</li>
+          </ul>
+        </div>
+        <div class="compare-card red">
+          <h3>Opposing arguments</h3>
+          <ul>
+            <li>Too much attention can cause pressure.</li>
+            <li>Siblings can provide opportunities to develop social skills.</li>
+            <li>Siblings can provide special support.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">15 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 16 — BALANCED FINAL OPINION
+         ===================================================== -->
+    <section class="slide" data-slide="16">
+      <h1 class="title underline">A Balanced Final Opinion</h1>
+
+      <div class="balanced-quote">
+        "After listening to both sides, we can see that a small family
+        has both advantages and disadvantages."
+      </div>
+
+      <div class="balanced-middle">
+        Parents can give more attention and help children become independent.
+        However, children may also benefit from developing social skills with siblings
+        and receiving daily support.
+      </div>
+
+      <div class="balanced-final">
+        "In our opinion, there is no perfect family size. What matters most is
+        how parents raise their children and how much love, support, and understanding
+        there is in the family."
+      </div>
+
+      <div class="footer">Is a Small Family Better?</div>
+      <div class="page-num">16 / 18</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 17 — GAME
+         ===================================================== -->
+    <section class="slide game-slide" data-slide="17">
+      <div class="q-deco" style="top:8%; left:6%; width:14%; aspect-ratio:1; font-size:clamp(30px,5vw,70px);">?</div>
+      <div class="q-deco" style="top:10%; right:8%; width:12%; aspect-ratio:1; font-size:clamp(24px,4vw,60px);">?</div>
+      <div class="q-deco" style="bottom:8%; left:8%; width:11%; aspect-ratio:1; font-size:clamp(22px,3.8vw,55px);">?</div>
+      <div class="q-deco" style="bottom:10%; right:6%; width:13%; aspect-ratio:1; font-size:clamp(28px,4.5vw,65px);">?</div>
+
+      <div class="game-title">LET'S TEST YOUR KNOWLEDGE!</div>
+
+      <div class="game-box">
+        And now, let's see how much you remember from our debate.
+        It's time for our game!
+      </div>
+
+      <div class="game-ready">Are you ready?</div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 18 — THANK YOU
+         ===================================================== -->
+    <section class="slide thank" data-slide="18">
+      <div class="top-bar"></div>
+      <div class="bottom-bar"></div>
+
+      <div class="thank-title">THANK YOU FOR LISTENING!</div>
+      <div class="thank-line"></div>
+      <div class="thank-question">What do you think? Is a small family better?</div>
+      <div class="thank-small">Any questions or opinions?</div>
+
+      <!-- small family icon at bottom -->
+      <div style="position:absolute;bottom:8%;left:50%;transform:translateX(-50%);width:14%;height:12%;">
+        <div style="position:absolute;left:8%;top:5%;width:20%;aspect-ratio:1;border-radius:50%;background:#8FB8DE;"></div>
+        <div style="position:absolute;left:0%;top:32%;width:36%;height:60%;border-radius:40% 40% 20% 20%;background:#8FB8DE;"></div>
+        <div style="position:absolute;right:8%;top:5%;width:20%;aspect-ratio:1;border-radius:50%;background:#4CAF50;"></div>
+        <div style="position:absolute;right:0%;top:32%;width:36%;height:60%;border-radius:40% 40% 20% 20%;background:#4CAF50;"></div>
+        <div style="position:absolute;left:40%;top:55%;width:18%;aspect-ratio:1;border-radius:50%;background:#E0A800;"></div>
+        <div style="position:absolute;left:32%;top:75%;width:34%;height:28%;border-radius:40% 40% 20% 20%;background:#E0A800;"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="progress"></div>
+
+  <div id="controls">
+    <button id="btn-prev">◀ Prev</button>
+    <span id="slide-indicator">1 / 18</span>
+    <button id="btn-next">Next ▶</button>
+    <button id="btn-notes" class="notes-toggle">📝 Notes</button>
+    <button id="btn-fullscreen" class="notes-toggle">⛶ Fullscreen</button>
+  </div>
+
+  <div id="notes-panel">
+    <h4>Speaker Notes</h4>
+    <p id="notes-content">—</p>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   SPEAKER NOTES (theo từng slide)
+   ========================================================= */
+const notes = {
+  1: "Good morning everyone. Today, our group will present a topic that many people talk about: Is a small family better? We will look at both the advantages and disadvantages of a small family. Our group has five members: Quí, C. Nhi, Chim, Châu, and Sáng. Instead of just listing ideas, we will explore this topic through a short debate. Let's begin.",
+  2: "Let me introduce our team. I'm Quí — I will open the presentation and give the conclusion. C. Nhi and Chim are on the supporting side. Châu and Sáng are on the opposing side. Now, let's start with a simple question: What is a small family?",
+  3: "So, what is a small family? In general, a small family has parents and one or two children. Of course, this is just a general description — every family is different. In modern society, small families are becoming more and more common. And this leads us to our big question.",
+  4: "Here is our big question: Is a small family better? On one side, we have the advantages — the supporting side. On the other side, we have the disadvantages — the opposing side. Today, instead of simply listing advantages and disadvantages, we will explore both sides through a short debate. Let me show you the order of our debate.",
+  5: "Here is our debate roadmap. C. Nhi will start with Supporting Point #1. Then Sáng responds with Opposing Point #1. After that, Chim gives Supporting Point #2, and Châu responds with Opposing Point #2. C. Nhi returns with Supporting Point #3, Sáng gives Opposing Point #3, and finally, I will give the balanced conclusion. Let's begin with C. Nhi.",
+  6: "Thank you, Quí. My first supporting point is about parental attention. A small family allows parents to give more attention to their children. Parents have more time for each child. They can help their children study, listen to their problems, and understand their needs better. So the key ideas here are time, care, and understanding. But is more attention always a good thing? Let's hear the opposing side.",
+  7: "Thank you, C. Nhi. I agree that children need attention. However, too much attention can sometimes be a problem. Parents may control their children too much. They may have high expectations. Children may feel stressed, and they may feel that they cannot make their own choices. So, more attention can lead to too much control, and then to pressure. But can more attention also have a positive effect? Let's hear Chim.",
+  8: "Thank you, Sáng. That can happen, but more attention does not always mean more control. Parents can use their time to teach their children how to make decisions and become independent. Parents have more time to guide children. Children can learn to make their own decisions and learn responsibility. Parents can support children without making every decision for them. So, guidance leads to decision-making, then responsibility, and finally independence. However, is independence the only thing children need? Let's hear Châu.",
+  9: "Thank you, Chim. I agree that parents can teach children to be independent. However, children also need to learn how to interact with other children. Siblings can teach children how to share. They can learn how to cooperate, solve small problems together, and understand other people's feelings. So, sharing leads to cooperation, then problem-solving, and finally social skills. But do children really need siblings to learn these skills? Let's hear C. Nhi.",
+  10: "Thank you, Châu. That is true, but children do not need siblings to develop social skills. They can learn these skills from friends, classmates, and other people. Friends can teach children how to share. School gives children opportunities to cooperate. Children can join group activities, make friends, and learn how to communicate. So, friends, school, and group activities together can build social skills. But can friends give children the same support as siblings? Let's hear Sáng.",
+  11: "Yes, children can learn from friends, but siblings can give a different kind of support. They live together and can support each other every day. Siblings can play together, share their feelings, and help each other. They can support each other when parents are busy. They grow up and experience many things together. So, siblings provide daily support, shared experiences, and strong family bonds. This is the last point of our debate. Now, Quí will summarize everything.",
+  12: "This slide shows the complete flow of our debate. C. Nhi started with more parental attention. Sáng responded that too much attention can cause pressure. Chim then explained that positive attention can build independence. Châu pointed out that independence is not enough — children also need social skills. C. Nhi responded that social skills can come from friends and school. And Sáng concluded that siblings provide special support. Now, let's compare the two sides.",
+  13: "Let's look at both sides together. The supporting side says that a small family gives more parental attention, that guidance can build independence, and that friends and school can develop social skills. The opposing side says that too much attention can cause pressure, that children need opportunities to practise social skills with siblings, and that siblings can provide special daily support. As you can see, both sides have valid points.",
+  14: "Before we conclude, let's review some key vocabulary from our debate. These words are important for understanding the topic. For example, attention means care and notice given to someone. Pressure is stress from high expectations. Independence is the ability to make your own decisions. And siblings means brothers and sisters. Now, let's move to the conclusion.",
+  15: "So, what have we learned? On the supporting side, parents can give more attention. More attention can help children become independent. And children can learn social skills from friends and school, even without siblings. On the opposing side, too much attention can cause pressure. Siblings can provide opportunities to develop social skills. And siblings can provide special support. Both sides give us important ideas to think about.",
+  16: "After listening to both sides, we can see that a small family has both advantages and disadvantages. Parents can give more attention and help children become independent. However, children may also benefit from developing social skills with siblings and receiving daily support. In our opinion, there is no perfect family size. What matters most is how parents raise their children and how much love, support, and understanding there is in the family.",
+  17: "And now, let's see how much you remember from our debate. It's time for our game! Are you ready?",
+  18: "Thank you for listening! Now, we would like to hear from you. What do you think? Is a small family better? Do you have any questions or opinions? We are happy to discuss."
+};
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const totalSlides = slides.length;
+let current = 0;
+
+const indicator = document.getElementById('slide-indicator');
+const progress = document.getElementById('progress');
+const notesPanel = document.getElementById('notes-panel');
+const notesContent = document.getElementById('notes-content');
+const app = document.getElementById('app');
+
+function showSlide(index) {
+  if (index < 0) index = 0;
+  if (index >= totalSlides) index = totalSlides - 1;
+  slides.forEach((s, i) => s.classList.toggle('active', i === index));
+  current = index;
+  indicator.textContent = (index + 1) + ' / ' + totalSlides;
+  progress.style.width = ((index + 1) / totalSlides * 100) + '%';
+  const key = index + 1;
+  notesContent.textContent = notes[key] || '(No notes)';
+}
+
+document.getElementById('btn-prev').addEventListener('click', () => showSlide(current - 1));
+document.getElementById('btn-next').addEventListener('click', () => showSlide(current + 1));
+document.getElementById('btn-notes').addEventListener('click', () => {
+  notesPanel.classList.toggle('show');
+});
+document.getElementById('btn-fullscreen').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().then(() => {
+      app.classList.add('fullscreen');
+    }).catch(err => console.warn(err));
+  } else {
+    document.exitFullscreen().then(() => {
+      app.classList.remove('fullscreen');
+    });
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    app.classList.remove('fullscreen');
+  }
+});
+
+/* Keyboard navigation */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+    e.preventDefault();
+    showSlide(current + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    showSlide(current - 1);
+  } else if (e.key === 'Home') {
+    showSlide(0);
+  } else if (e.key === 'End') {
+    showSlide(totalSlides - 1);
+  } else if (e.key === 'n' || e.key === 'N') {
+    notesPanel.classList.toggle('show');
+  } else if (e.key === 'f' || e.key === 'F') {
+    document.getElementById('btn-fullscreen').click();
+  } else if (e.key === 'Escape') {
+    if (notesPanel.classList.contains('show')) {
+      notesPanel.classList.remove('show');
+    }
+  }
+});
+
+/* Touch swipe */
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(dx) > 60) {
+    if (dx < 0) showSlide(current + 1);
+    else showSlide(current - 1);
+  }
+}, { passive: true });
+
+/* Init */
+showSlide(0);
+</script>
+
+</body>
+</html>
